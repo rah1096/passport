@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Passport Login</title>
+    <link rel="stylesheet" href="/stylesheets/style.css"/>
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css"/>
+</head>
+<body>
+    {{{messages}}}
+    {{#if errors}}
+        {{#each errors}}
+            {{msg}}
+        {{/each}}
+    {{/if}}
+    <div class="container">
+        {{{body}}}
+    </div>
+
+
+
+    <script src="/javascripts/bootstrap.min.js"></script>
+</body>
+</html>
