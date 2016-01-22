@@ -7,18 +7,18 @@
     <link rel="stylesheet" href="/stylesheets/bootstrap.min.css"/>
 </head>
 <body>
-    {{{messages}}}
-    {{#if errors}}
-        {{#each errors}}
-            {{msg}}
-        {{/each}}
-    {{/if}}
     <div class="container">
+        {{{messages}}}
+        {{#if errors}}
+            {{#each errors}}
+                <div class="alert alert-danger">{{msg}}</div>
+            {{/each}}
+        {{/if}}
         {{{body}}}
     </div>
 
 
-
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
     <script src="/javascripts/bootstrap.min.js"></script>
 </body>
 </html>
