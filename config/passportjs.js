@@ -13,6 +13,33 @@ module.exports = function(passport) {
         });
     });
 
+    // Login
+    passport.use('local-login', new LocalStrategy({
+        passReqToCallback: true
+    },
+    function(req, username, password, done) {
+        User.getUserByUsername(username, function(err, user) {
+            if (err) {
+                return done(err);
+            }
+            // Does user exist?
+            if (!user) {
+                req.flash('error', 'User not found');
+                return done(null, false);
+            }
+            // Is password valid?
+            if (!isValidPassword(user, password)) {
+                req.flash('error', 'Invalid password');
+                return done(null, false);
+            }
+            // If success...
+            req.flash('success', 'You are now logged in');
+            return done(null, user);
+        });
+    }
+    ));
+
+
     // Register
     passport.use('local-register', new LocalStrategy({
         passReqToCallback: true
@@ -22,13 +49,13 @@ module.exports = function(passport) {
                 // Find a user with this username
                 User.findOne({username: username}, function(err, user) {
                     if (err) {
-                        console.log('Error: ' + err)
+                        console.log('Error: ' + err);
                         return doen(err);
                     }
                     // Does user exist?
                     if(user) {
                         console.log('That user already exists');
-                        return done(null, false, req.flash('message', 'User already exists'))
+                        return done(null, false, req.flash('message', 'User already exists'));
                     } else {
                         var newUser = new User();
 
@@ -55,6 +82,10 @@ module.exports = function(passport) {
             process.nextTick(findOrCreateUser);
         }
     ));
+
+    var isValidPassword = function(user, password) {
+        return bcrypt.compareSync(password, user.password);
+    }
 
     var createHash = function(password) {
         return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);

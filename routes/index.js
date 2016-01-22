@@ -13,7 +13,12 @@ router.get('/register', function(req, res, next) {
 });
 
 router.get('/dashboard', function(req, res, next) {
-  res.render('dashboard', { title: 'Dashboard', layout: 'Dashboard_layout' });
+  if (!req.user) {
+    req.flash('error', 'You are not logged in');
+    res.render('login', { title: 'Please log in' });
+  } else {
+    res.render('dashboard', { title: 'Dashboard', layout: 'Dashboard_layout' });
+  }
 });
 
 router.post('/register', function(req, res, next) {
@@ -47,6 +52,23 @@ router.post('/register', function(req, res, next) {
     })(req, res, next)
   }
 
+});
+
+router.post('/login', function(req, res, next) {
+  var username = req.body.username;
+  var password = req.body.password;
+
+  passport.authenticate('local-login', {
+    successRedirect: '/dashboard',
+    failureRedirect: '/',
+    failureFlash: true
+  })(req, res, next);
+});
+
+router.get('/logout', function(req, res) {
+  req.logout();
+  req.flash('success', 'You are now logged out');
+  res.redirect('/');
 });
 
 module.exports = router;
